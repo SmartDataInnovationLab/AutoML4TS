@@ -12,8 +12,22 @@ In order to improve the performance of ML models, the package TSFRESH is integra
 optimization.
 
 # Installation
-
 TBD
+
+System requirements
+* Linux operating system
+* Python (>=3.5)
+* SWIG (version 3.0 or later)
+
+install all dependencies manually with:
+```
+curl https://rxxxxxxxxxxxxxxxxxx requrements.txt
+```
+then 
+```
+pip install autots
+```
+For installing on Windows, please refer to install_document.md
 
 # Running on time-series
 In order to train and predict on a time-series, only the following lines of code are required. It frees users from model selection and hyperparameter tuning leveraging advantages in Bayesian optimization. After optimization, users can get the most appropriate model and related parameters to the data.
@@ -51,12 +65,14 @@ For each step, there are a number of methods to choose from. The configuration s
 
 `Algorithm selection` : Ridge Regression,  Bayesian Regression,  Stochastic Gradient Descent Regression,  Support Vector Machines Regression, Decision Trees Regression, Random Forest Regression, Bayesian ARD Regression, Xgboost Regression, LightGBM Regression, Catboost Regression
 
-`Validation` : time-series k-fold walk-forward cross-validation.
+`Validation` : time-series k-fold walk-forward cross-validation as illustrated below. traditional cross-validation method cannot be directly used with time-series data, because it assumes that there is no relationship between observations and that each observation is independent. The time dependency structure of time-series must not be randomly split into groups. Inwalk-forward cross-validation method, the corresponding training set only consists of observations that occurred prior to the observation that forms the test set.
+![image](https://github.com/SmartDataInnovationLab/AutoML4TS/blob/master/Images/crossvalidation.png)
 
+# Important Features
 
 
 # Retraining the meta-learner
-
+In order to accelerate the optimization process a meta-learning system are built in this framework which as shown below.
 ![image](https://github.com/SmartDataInnovationLab/AutoML4TS/blob/master/Images/framework.png)
 TBD
 
