@@ -41,7 +41,7 @@ def cross_validation_visualization(folders, timeseries, prediction_list, groundt
 		
 def prediction_visualization(timeseries, start, split, prediction, train_prediction):
     
-    ax = timeseries.iloc[start:split].plot(label='observed', figsize=(20, 15))
+    ax = timeseries.iloc[start:split].plot(label='observed', figsize=(15, 5))
     train_prediction.plot(ax=ax,label='train prediction')
     prediction.plot(ax=ax, label='Forecast')
     timeseries.iloc[split:].plot(ax=ax,label='forecasting groundtruth' )

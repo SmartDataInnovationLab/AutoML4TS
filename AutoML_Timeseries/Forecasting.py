@@ -99,17 +99,18 @@ class Automated_ML_Forecasting():
 
             self._all_features, self._y, self._time_scalers, \
             self._timefeature_columns, self._no_ts_flag = self._extract_features_for_training(timeseries)
+            self._transform_the_ts_features()
             self._save_all_features()
 
         else:
 
             # if the features is already calculated, load the features
-            self._all_features, self._y, self._time_scalers, \
-            self._timefeature_columns, self._no_ts_flag  = self._load_all_features() 
+            self._all_features, self._y, self._time_scalers, self._timefeature_columns, \
+            self._no_ts_flag, self._median, self._IQR, self._kind_to_fc_parameters, self._ts_features_columns  = self._load_all_features() 
             
             
 
-
+    def _transform_the_ts_features(self):
         # Transform the tsfresh features to range (0, 1)
         self._median = None 
         self._IQR = None
@@ -130,6 +131,8 @@ class Automated_ML_Forecasting():
                 self._ts_features_columns = transformed_features.columns
             
                 self._all_features = pd.concat([transformed_features,train_x_time], axis = 1)
+            else:
+                self._no_ts_flag = True
                 
         # Transform the raw values features to range (0, 1)
         #if self._timeseries_IQR != 0:
@@ -178,7 +181,11 @@ class Automated_ML_Forecasting():
                          'y':self._y,
                          'time_scalers':self._time_scalers,
                          'timefeature_columns':self._timefeature_columns,
-                         'no_ts_flag':self._no_ts_flag}
+                         'no_ts_flag':self._no_ts_flag,
+                         'median':self._median,
+                         'IQR':self._IQR,
+                         'kind_to_fc_parameters':self._kind_to_fc_parameters,
+                         'ts_features_columns':self._ts_features_columns}
 
         with open(self._dir_name +self._features_file_name, 'wb') as f:
             pickle.dump(features_info, f, pickle.HIGHEST_PROTOCOL)   
@@ -190,8 +197,8 @@ class Automated_ML_Forecasting():
         """
         with open(self._dir_name +self._features_file_name, 'rb') as f:
             features_info = pickle.load(f)
-        return (features_info['all_features'],features_info['y'],
-                features_info['time_scalers'],features_info['timefeature_columns'], features_info['no_ts_flag']) 
+        return (features_info['all_features'],features_info['y'],features_info['time_scalers'],features_info['timefeature_columns'], 
+                features_info['no_ts_flag'], features_info['median'], features_info['IQR'], features_info['kind_to_fc_parameters'],  features_info['ts_features_columns']) 
 
 
 
@@ -226,7 +233,14 @@ class Automated_ML_Forecasting():
         return  pd.Series(np.array(prediction).reshape(-1), index= forecasting_index)
 
     def _extract_features_for_forecasting(self, sub_timeseries, forecasting_index, step):
-        
+ 
+
+        #if sub_timeseries.isnull().values.any():
+        #    sub_timeseries.interpolate(method="krogh", inplace=True)
+        #    print(sub_timeseries)
+        #sub_timeseries = sub_timeseries.replace(np.inf,20)
+        #sub_timeseries = sub_timeseries.replace(-np.inf,-20)
+ 
         length = len(sub_timeseries)
         features = pd.DataFrame()
         
@@ -248,6 +262,9 @@ class Automated_ML_Forecasting():
             assert (self._IQR is not None),  "_IQR for transformation is None"
 
             tsfresh_features = (1+np.exp((-tsfresh_features + self._median)/(self._IQR*1.35)))**(-1)
+			
+            tsfresh_features = tsfresh_features.replace(-np.inf,np.NAN)
+            tsfresh_features = tsfresh_features.replace(np.inf,np.NAN)
 
             # if there is nan in features, replace it with caculated mean
             if tsfresh_features.isnull().values.any():
@@ -257,7 +274,7 @@ class Automated_ML_Forecasting():
                     tsfresh_features.iloc[0,position[i]] = features_mean_values[position[i]]
                     
             features = pd.concat([tsfresh_features,features], axis = 1)
-        
+    
         
         """Time index as features"""
         if self._time_feature == True:
@@ -338,6 +355,7 @@ class Automated_ML_Forecasting():
         
         # split the 
         split = self._all_features.shape[0] - 3*self._forecasting_steps
+        split = max(split,int(self._y.shape[0]*3/4))
         if self._max_train_size is None:
             start = 0
             train_x = self._all_features.iloc[:split]
@@ -378,7 +396,7 @@ class Automated_ML_Forecasting():
             # Do the prediction
             prediction = self.forecasting(estimator, split)
             # training performance . 1 step forecasting
-            train_prediction = estimator.predict(train_x)
+            train_prediction = estimator.predict(np.array(train_x))
             
             train_prediction = pd.Series(train_prediction, index=train_x.index)
             #  Visualisieren
