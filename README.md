@@ -1,5 +1,7 @@
 # Automated-Machine-Learning-AutoML-for-time-series-forecasting
 
+![image](https://github.com/SmartDataInnovationLab/AutoML4TS/blob/master/Images/Prediction.png)
+
 Time-series forecasting is studied in nearly all fields of science and engineering.
 For all forecasting tasks, model selection is a necessary step. However, from a
 set of available models, selecting the most adequate model for a given dataset is
