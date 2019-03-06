@@ -36,10 +36,11 @@ TBD
 
 # Running on timeseries
 
+![image](https://github.com/SmartDataInnovationLab/AutoML4TS/blob/master/Images/timeseries_pipeline.png)
 TBD
-
 # Retraining the meta-learner
 
+![image](https://github.com/SmartDataInnovationLab/AutoML4TS/blob/master/Images/framework.png)
 TBD
 
 # Acknowledgement
