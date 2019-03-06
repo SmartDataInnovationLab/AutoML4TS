@@ -236,8 +236,8 @@ class Automated_ML_Forecasting():
  
 
         #if sub_timeseries.isnull().values.any():
-        #    sub_timeseries.interpolate(method="krogh", inplace=True)
-        #    print(sub_timeseries)
+            #sub_timeseries.interpolate(method="krogh", inplace=True)
+            #print(sub_timeseries)
         #sub_timeseries = sub_timeseries.replace(np.inf,20)
         #sub_timeseries = sub_timeseries.replace(-np.inf,-20)
  
