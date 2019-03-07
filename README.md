@@ -1,14 +1,15 @@
-# Automated-Machine-Learning-AutoML-for-time-series-forecasting
+# AutoML4TS : Automated-Machine-Learning-AutoML-for-time-series-forecasting
+AutoML4TS is a automated tool for forecasting time-series data based on classic regression models. It works well with different time-series, e.g seasonal, non-seasonal, trend, non-trend. When using this tool, the user does not need to make choice between different models and customize it by setting its hyperparameters. This is a project of [SDSC-BW](https://sdsc-bw.de/erfolge).
 
 ![image](https://github.com/SmartDataInnovationLab/AutoML4TS/blob/master/Images/Prediction.png)
 
 Time-series forecasting is studied in nearly all fields of science and engineering. For all forecasting tasks, model selection is a necessary step. However, from a set of available models, selecting the most adequate model for a given dataset is still a diﬃcult task. If the hyper-parameters of candidate models are taken into consideration, there would be an enormous number of possible alternatives overall. The wide range of forecasting applications led to growing demand for a system which can automatically select a good model and simultaneously set good parameters for a new task.
 
-The combined algorithm selection and hyper-parameter optimization problem was dubbed CASH. Recently, automated approaches for solving this problem have led to substantial improvements. The Sequential Model-based Algorithm Conﬁguration (SMAC) method showed a successful performance in a high-dimensional, structured and continuous and discrete (Categorical) hybrid parameters space.
+The combined algorithm selection and hyper-parameter optimization problem was dubbed CASH. Recently, automated approaches for solving this problem have led to substantial improvements. The Sequential Model-based Algorithm Conﬁguration ([SMAC](https://github.com/automl/SMAC3)) method showed a successful performance in a high-dimensional, structured and continuous and discrete (Categorical) hybrid parameters space.
 
 This framework, through the application of SMAC, deals with this problem in the context of forecasting. In contrast to previous works on time-series forecasting, the candidate models in my work are machine learning (ML) models from the Scikit-learn regression package. 
 
-In order to improve the performance of ML models, the package TSFRESH is integrated in the framework, which extracts comprehensive and well-established features from time-series. In order to improve the efficiency of the optimization process, a meta-learning method are supported to generate configurations with the likelihood of performing for a new task. This initialization method yields slight improvements to expedite the
+In order to improve the performance of ML models, the package TSFRESH  [reference] is integrated in the framework, which extracts comprehensive and well-established features from time-series. In order to improve the efficiency of the optimization process, a meta-learning method are supported to generate configurations with the likelihood of performing for a new task. This initialization method yields slight improvements to expedite the
 optimization.
 
 # Installation
@@ -45,7 +46,8 @@ autots.optimize()
 autots.predict()
 ```
 
-The next few paragraphs will give you an overview of this framework.
+The next few paragraphs will give you an overview of this framework, which is inspired by [Auto Sklearn](https://github.com/automl/auto-sklearn)
+.
 ![image](https://github.com/SmartDataInnovationLab/AutoML4TS/blob/master/Images/timeseries_pipeline.png)
 In this framework, time-series forecasting problems are reframed as supervised learning problems through sliding window method. To solve such machine learning problems follows this framework a commonly used process, which consists of the following five steps.
 
@@ -69,12 +71,14 @@ For each step, there are a number of methods to choose from. The configuration s
 ![image](https://github.com/SmartDataInnovationLab/AutoML4TS/blob/master/Images/crossvalidation.png)
 
 # Important Features
-
+AutoML4TS is specifically designed for pruduction or commercial business. It is important to know what features have a major impact on the future. Linear models are popular because of their explainability. Getting features' importance from a tree-based model is pretty easy. After training on a time-series, this tool will give important features. 
 
 # Retraining the meta-learner
-In order to accelerate the optimization process a meta-learning system are built in this framework which as shown below.
+
 ![image](https://github.com/SmartDataInnovationLab/AutoML4TS/blob/master/Images/framework.png)
-TBD
+In order to accelerate the optimization process， a meta-learning system are built in this framework which as shown below. when SMAC starts with a new optimization task, it requires a number of initial evaluations to build the initial surface model. An effective initialization helps SMAC to build a better initial surface model, which can also accelerate the detection of the high-performance region [reference]. Meta-learning is a promising solution, which can suggest good configurations for a new dataset that performed well on previous similar datasets. 
+
+After training a new time-series, the corresponding best model and hyperparameters will be stored in your local database for future use. Now we are trying to build a repository of comprehensive time-seires and corresponding best parameter configurations. After finishing that, we will release these data and provide APIs to access it.
 
 # Acknowledgement
 
