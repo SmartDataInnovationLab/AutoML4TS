@@ -82,5 +82,4 @@ After training a new time-series, the corresponding best model and hyperparamete
 
 # Acknowledgement
 
-TBD
-
+The work originates from the master thesis of @YexuZhou at KIT IAI and TECO, which was conducted on the [SDIL Platform ](www.sdil.de). Currently the code is developed  with funding from the BMBF SDI-X Project (01IS15035A)
