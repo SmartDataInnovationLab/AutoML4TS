@@ -21,16 +21,6 @@ class SVR_Forecasting(Automated_ML_Forecasting):
                  forecasting_steps = 25, n_splits = 5,
                  max_train_size = None,  NAN_threshold = 0.05):
 
-        '''{TODO} Check window size'''
-        """{TODO}, check the series"""   '''{TODO} check data format, if wrong exception'''
-        """{TODO} class information __print__"""
-        """{TODO} decomposition
-            # check DataSeries 
-            check_the_parameters(n_splits, 'n_splits', numbers.Integral, 1)
-            check_the_parameters(forecasting_steps, 'forecasting_steps', numbers.Integral, 0)
-            check_the_parameters(window_size, 'window_size', numbers.Integral, 0)
-        
-        """
         
         self.kernel = kernel
         self.C = float(C)
